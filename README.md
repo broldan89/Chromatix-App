@@ -1,4 +1,9 @@
 # 🌈 Chromatix
+<p align="center">
+  <img src="dashboard_mockup.png" width="350" title="Chromatix Interface">
+</p>
+
+---
 > **El sistema operativo de la colorimetría profesional.**
 
 Chromatix es un asistente inteligente diseñado para eliminar el error humano en el salón. Transforma el diagnóstico visual en fórmulas químicas exactas, optimizando el uso de insumos y garantizando resultados predecibles.
