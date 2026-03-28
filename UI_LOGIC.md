@@ -1,37 +1,40 @@
 # 🖱️ Lógica de Interfaz (UI Logic) - Chromatix
 
-Este documento describe el comportamiento funcional de cada componente visual y su interacción con los conjuntos de datos (.csv).
+Este documento define el comportamiento funcional de los componentes visuales y su interacción con los datos maestros (.csv).
 
 ---
 
 ## 1. Pantalla de Inicio (Dashboard)
-Es el punto de entrada principal. El objetivo es minimizar la fricción del colorista.
-
-- **Botón "Nuevo Diagnóstico" (Acción Primaria):** - **Función:** Inicia el algoritmo de cálculo. 
-    - **Destino:** Pantalla de Entrada de Datos.
-- **Botón "Calculadora Libre" (Acción Secundaria):** - **Función:** Abre un selector de ratios (1:1.5, 1:2) para mezclas manuales rápidas. 
-    - **Referencia:** Consulta `Mezclas_Ratio.csv`.
-- **Sección "Trabajos Recientes":** - **Función:** Lista las últimas 3 entradas de la base de datos de historial.
-    - **Datos:** Muestra Nombre, Fórmula (ej. 8.21 + 40 Vol) y Tiempo transcurrido.
+- **Botón "Nuevo Diagnóstico":** Inicia el algoritmo de cálculo.
+- **Botón "Calculadora Libre":** Acceso rápido a ratios de mezcla (`mezclas_ratio.csv`).
+- **Sección "Trabajos Recientes":** Lista las últimas 3 entradas del historial de clientes.
 
 ## 2. Flujo de Diagnóstico (Input)
-El usuario ingresa las variables del cabello de la clienta.
+- **Selector de Nivel Natural (1-10):** Define el `Fondo_Revelado` inicial.
+- **Selector de Nivel Deseado (1-10):** Calcula el salto de niveles ($Deseado - Natural$).
+- **Switch de Canas (Sí/No):** Si es "Sí", el sistema prioriza la serie natural (.0) para cobertura.
 
-- **Selector de Nivel Natural (1-10):** - **Componente:** Slider o Grid visual con fotos de referencia.
-    - **Lógica:** Al seleccionar un número, el sistema identifica el `Fondo_Revelado` correspondiente en `Niveles_Naturales.csv`.
-- **Selector de Nivel Deseado (1-10):** - **Lógica:** El sistema resta `Nivel_Deseado - Nivel_Natural` para calcular cuántos tonos se deben aclarar.
-- **Switch de Canas (Sí/No):** - **Lógica:** Si es "Sí", el sistema debe priorizar la mezcla con serie natural (.0) para cobertura, según la lógica de Yellow.
+## 3. Reglas de Asistencia Técnica (Cuidado de la Fibra) 🛡️
+El sistema debe disparar sugerencias automáticas de productos aditivos según el riesgo químico:
 
-## 3. Pantalla de Resultados (Output)
-Muestra la "Receta" final calculada por el motor.
+| Condición Técnica | Sugerencia Automática | Producto Recomendado |
+| :--- | :--- | :--- |
+| Si `Volumen_Ox` >= 30 Vol | "Proteger estructura capilar" | **Bond Hero** (5ml por mezcla) |
+| Si `Salto_Niveles` > 3 | "Reforzar enlaces de queratina" | **Bond Hero** |
+| Si `Tipo_Servicio` == "Decoloración" | "Protección de piel sensible" | **Scalp Protector** |
+| Si `Fondo_Revelado` == Amarillo/Naranja | "Matización de alta potencia" | **Reflejo .21 (Irisado Ceniza)** |
 
-- **Tarjeta de Fórmula:** - **Cálculo:** Muestra el Tono Sugerido (neutralizador + base) y el Volumen de Oxidante. 
-    - **Referencia:** Cruza datos de `Reflejos_Logic.csv` y `Tiempos_Y_Volumenes.csv`.
-- **Módulo de Mezcla:** - **Lógica:** Calcula los gramos/mililitros exactos basándose en el ratio (ej: si el usuario pone 60g de tinte, mostrar 90ml de oxidante).
-- **Temporizador (Timer):** - **Función:** Al presionar "Iniciar", comienza la cuenta regresiva basada en el tiempo sugerido en la tabla.
+## 4. Pantalla de Resultados (Output)
+- **Tarjeta de Fórmula:** Muestra Tono Sugerido + Volumen de Oxidante.
+- **Módulo de Mezcla:** Gramaje exacto basado en el `Ratio`.
+- **🛒 Botón "Confirmar & Descontar":** - Al presionar, se restan los gramos/ml del inventario local.
+    - Si el stock de un tinte o aditivo baja del 20%, genera una alerta en la **Smart Shopping List**.
+
+## 5. Módulo de Pedidos (Supply Chain)
+- **Lógica:** Si un producto sugerido (ej. Bond Hero) no está en stock según el inventario del salón, mostrar botón: **"Pedir a Distribuidora ahora"**.
 
 ---
 
 ## 🛠️ Notas para el Desarrollador
-- **Validación:** Si el sistema detecta que el aclarado solicitado es mayor a 4 niveles, debe mostrar una alerta de "Uso de Superaclarante requerido".
-- **Agnosticismo:** Los componentes visuales deben ser genéricos para permitir cambiar de marca (Yellow a otra) simplemente actualizando los archivos `.csv`.
+- **Prioridad de Seguridad:** El sistema nunca debe sugerir 40 Vol en cabellos declarados como "Sensibilizados" por el usuario.
+- **Interconectividad:** La sugerencia de Bond Hero debe aparecer como un "Pop-up" antes de mostrar la fórmula final para fomentar el upselling técnico.
