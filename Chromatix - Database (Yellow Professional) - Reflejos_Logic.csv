@@ -1,0 +1,15 @@
+ID_Reflejo,Marca,Código,Nombre_Comercial,Pigmento_Base,Neutraliza_A,Intensidad,Potencia
+REF_001,Yellow,0.1,Ceniza,Azul,Naranja,2,Normal
+REF_002,Yellow,0.11,Ceniza Intenso,Azul Doble,Naranja Fuerte,3,Alta
+REF_003,Yellow,0.2,Irisado,Violeta,Amarillo,2,Normal
+REF_004,Yellow,0.21,Irisado Ceniza,Violeta + Azul,Amarillo + Amarillo/Naranja,2,Normal (Compuesto)
+REF_005,Yellow,0.7,Mate,Verde,Rojo,2,Normal
+REF_006,Yellow,0.3,Dorado,Amarillo,- (Aporta calidez),1,Normal
+REF_007,Yellow,0.01,Ceniza Suave,Azul claro,Naranja leve,1,Suave
+REF_008,Yellow,0.02,Irisado Suave,Violeta claro,Amarillo leve,1,Suave
+REF_009,Yellow,0.22,Irisado Intenso,Violeta Doble,Amarillo Fuerte,3,Alta
+REF_010,Yellow,0.4,Cobrizo,Naranja,- (Aporta calidez),2,Normal
+REF_011,Yellow,0.44,Cobrizo Intenso,Naranja Doble,- (Aporta calidez),3,Alta
+REF_012,Yellow,0.5,Caoba,Rojo + Violeta,- (Aporta calidez),2,Normal
+REF_013,Yellow,0.6,Rojo,Rojo,- (Aporta calidez),2,Normal
+REF_014,Yellow,0.66,Rojo Intenso,Rojo Doble,- (Aporta calidez),3,Alta
