@@ -1,33 +1,43 @@
 # 📖 Diccionario de Datos - Motor Chromatix
 
-Este documento define la lógica de las columnas en los archivos CSV para asegurar una integración correcta en el desarrollo del software.
+Este documento define la estructura y lógica de los archivos CSV que alimentan el motor de colorimetría de Chromatix. Es la referencia técnica para asegurar que el desarrollo de software interprete correctamente las reglas de la marca (Yellow Professional).
 
 ---
 
-## 🎨 Tabla: `Reflejos_Logic.csv`
-Define cómo se comportan los pigmentos de la marca (Yellow Professional).
+## 👩‍🦱 1. Tabla: `niveles_naturales.csv`
+Es la base del diagnóstico. Define qué sucede físicamente con el cabello al ser aclarado.
 
-- **`Codigo`**: El número comercial del tinte (ej. .21, .11).
-- **`Pigmento_Base`**: El color físico del reflejo (Azul, Violeta, etc.).
-- **`Neutraliza_A`**: El fondo de aclaración que este código debe eliminar.
-- **`Potencia`**: 
-  - **Alta**: Reflejos intensos (.11).
-  - **Normal**: Reflejos estándar (.1).
-  - **Suave**: Reflejos con 0 (.01).
+- **`Nivel`**: Escala numérica internacional (1 al 10) que define la oscuridad/claridad natural.
+- **`Fondo_Revelado`**: El pigmento subyacente que aparece al aclarar (ej: Rojo, Naranja, Amarillo).
+- **`Neutralizante_Sugerido`**: El reflejo teórico necesario para contrarrestar el fondo revelado.
 
-## 📏 Tabla: `Mezclas_Ratio.csv`
-Define las proporciones químicas para la preparación.
+## 🎨 2. Tabla: `reflejos_logic.csv`
+Define el comportamiento de los pigmentos de la carta de color.
 
-- **`Tipo_Servicio`**: Coloración, Tonalización o Súper Aclarante.
-- **`Ratio`**: Relación Tinte:Oxidante (ej. 1:1.5 significa 60g de tinte + 90ml de agua oxigenada).
+- **`Codigo`**: El número comercial del tinte (ej: .21, .11, .1).
+- **`Pigmento_Base`**: El color físico del reflejo (Azul, Violeta, Verde, etc.).
+- **`Neutraliza_A`**: El color de fondo que este código específico está diseñado para eliminar.
+- **`Potencia`**: Clasifica la intensidad del pigmento (Alta, Normal o Suave).
 
-## ⏱️ Tabla: `Tiempos_Y_Volumenes.csv`
-Determina la potencia del oxidante según el objetivo.
+## ⏱️ 3. Tabla: `tiempos_y_volumenes.csv`
+Determina la fuerza química necesaria para alcanzar el objetivo.
 
-- **`Aclarado_Deseado`**: Cuántos niveles queremos subir (1, 2, 3 o 4 niveles).
-- **`Volumen_Ox`**: El volumen de agua oxigenada sugerido (10, 20, 30, 40 Vol).
-- **`Tiempo_Min`**: Tiempo de exposición en minutos para que la química haga efecto.
+- **`Aclarado_Deseado`**: La diferencia en niveles (saltos) entre la base natural y el objetivo (1, 2, 3 o 4 tonos).
+- **`Volumen_Ox`**: El volumen de agua oxigenada recomendado (10, 20, 30 o 40 Vol).
+- **`Tiempo_Min`**: El tiempo de exposición sugerido en minutos para una reacción completa.
+
+## 📏 4. Tabla: `mezclas_ratio.csv`
+Define las proporciones exactas para la preparación del producto.
+
+- **`Tipo_Servicio`**: Categoría del trabajo (Coloración, Tonalización, Superaclarante).
+- **`Ratio`**: Relación Tinte:Oxidante (ej: 1:1.5 significa que por cada 60g de tinte se usan 90ml de oxidante).
 
 ---
-**Nota para el desarrollador:** El flujo lógico siempre debe ser: 
-`Diagnóstico Inicial` -> `Cálculo de Aclarado` -> `Elección de Oxidante/Tiempo` -> `Identificación de Fondo` -> `Sugerencia de Reflejo`.
+
+## 🛠️ Notas de Implementación para el Desarrollador
+El flujo lógico del algoritmo debe seguir este orden:
+1. **Entrada:** `Nivel_Actual` + `Nivel_Deseado`.
+2. **Cálculo de Salto:** Restar niveles para consultar `tiempos_volumenes.csv`.
+3. **Identificación de Fondo:** Consultar `niveles_naturales.csv` para saber qué color neutralizar.
+4. **Sugerencia de Reflejo:** Buscar en `reflejos_logic.csv` el código que coincida con el fondo identificado.
+5. **Cálculo de Mezcla:** Aplicar el `Ratio` según el tipo de servicio seleccionado.
