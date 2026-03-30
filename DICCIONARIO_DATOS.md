@@ -1,43 +1,51 @@
 # 📖 Diccionario de Datos - Motor Chromatix
 
-Este documento define la estructura y lógica de los archivos CSV que alimentan el motor de colorimetría de Chromatix. Es la referencia técnica para asegurar que el desarrollo de software interprete correctamente las reglas de la marca (Yellow Professional).
+Este documento define la estructura y lógica de los archivos CSV que alimentan el motor de colorimetría de Chromatix. Es la referencia técnica para asegurar la interpretación correcta de las reglas de Yellow Professional.
 
 ---
 
 ## 👩‍🦱 1. Tabla: `niveles_naturales.csv`
-Es la base del diagnóstico. Define qué sucede físicamente con el cabello al ser aclarado.
-
-- **`Nivel`**: Escala numérica internacional (1 al 10) que define la oscuridad/claridad natural.
-- **`Fondo_Revelado`**: El pigmento subyacente que aparece al aclarar (ej: Rojo, Naranja, Amarillo).
-- **`Neutralizante_Sugerido`**: El reflejo teórico necesario para contrarrestar el fondo revelado.
+Base del diagnóstico. Define la biología del cabello.
+- **`Nivel`**: Escala 1-10.
+- **`Fondo_Revelado`**: Pigmento subyacente (ej. Rojo, Naranja).
+- **`Neutralizante_Sugerido`**: Reflejo teórico para contrarrestar el fondo.
 
 ## 🎨 2. Tabla: `reflejos_logic.csv`
-Define el comportamiento de los pigmentos de la carta de color.
+Comportamiento de los pigmentos de la carta de color.
+- **`Codigo`**: Nomenclatura comercial (ej. .21, .1).
+- **`Neutraliza_A`**: Color de fondo que elimina.
+- **`Potencia`**: Intensidad (Alta, Normal, Suave).
 
-- **`Codigo`**: El número comercial del tinte (ej: .21, .11, .1).
-- **`Pigmento_Base`**: El color físico del reflejo (Azul, Violeta, Verde, etc.).
-- **`Neutraliza_A`**: El color de fondo que este código específico está diseñado para eliminar.
-- **`Potencia`**: Clasifica la intensidad del pigmento (Alta, Normal o Suave).
-
-## ⏱️ 3. Tabla: `tiempos_y_volumenes.csv`
-Determina la fuerza química necesaria para alcanzar el objetivo.
-
-- **`Aclarado_Deseado`**: La diferencia en niveles (saltos) entre la base natural y el objetivo (1, 2, 3 o 4 tonos).
-- **`Volumen_Ox`**: El volumen de agua oxigenada recomendado (10, 20, 30 o 40 Vol).
-- **`Tiempo_Min`**: El tiempo de exposición sugerido en minutos para una reacción completa.
+## ⏱️ 3. Tabla: `tiempos_volumenes.csv`
+Fuerza química necesaria según el objetivo.
+- **`Aclarado_Deseado`**: Salto en niveles (1 a 4).
+- **`Volumen_Ox`**: 10, 20, 30 o 40 Vol.
+- **`Tiempo_Min`**: Tiempo sugerido de exposición.
 
 ## 📏 4. Tabla: `mezclas_ratio.csv`
-Define las proporciones exactas para la preparación del producto.
+Proporciones técnicas de mezcla.
+- **`Tipo_Servicio`**: Coloración, Tonalización, Superaclarante.
+- **`Ratio`**: Relación Tinte:Oxidante (1:1.5, 1:2, etc.).
 
-- **`Tipo_Servicio`**: Categoría del trabajo (Coloración, Tonalización, Superaclarante).
-- **`Ratio`**: Relación Tinte:Oxidante (ej: 1:1.5 significa que por cada 60g de tinte se usan 90ml de oxidante).
+## 🧪 5. Tabla: `decoloracion_logic.csv` (Nuevo ✨)
+Estrategia para aclarados extremos (Salto > 4 niveles).
+- **`Producto`**: Bleach 7 (Seguridad) o Bleach 9 (Potencia).
+- **`Fondo_Objetivo`**: Nivel de aclarado deseado (8, 9 o 10).
+- **`Uso_Recomendado`**: Contexto (Cabello sensibilizado vs. Resistente).
+
+## ⚖️ 6. Tabla: `consumo_insumos.csv` (Nuevo ✨)
+Dosificación física según la estructura capilar para evitar desperdicio.
+- **`Largo_Cabello`**: Corto, Medio, Largo.
+- **`Densidad`**: Baja o Alta.
+- **`Gramos_Tinte_Color` / `Gramos_Polvo_Deco`**: Cantidad de producto seco.
 
 ---
 
 ## 🛠️ Notas de Implementación para el Desarrollador
-El flujo lógico del algoritmo debe seguir este orden:
-1. **Entrada:** `Nivel_Actual` + `Nivel_Deseado`.
-2. **Cálculo de Salto:** Restar niveles para consultar `tiempos_volumenes.csv`.
-3. **Identificación de Fondo:** Consultar `niveles_naturales.csv` para saber qué color neutralizar.
-4. **Sugerencia de Reflejo:** Buscar en `reflejos_logic.csv` el código que coincida con el fondo identificado.
-5. **Cálculo de Mezcla:** Aplicar el `Ratio` según el tipo de servicio seleccionado.
+El algoritmo debe ejecutar la lógica en este orden de prioridades:
+
+1. **Bifurcación Inicial:** Calcular `Salto`. Si `Salto` > 4 -> Derivar a `decoloracion_logic.csv`.
+2. **Selección de Producto:** Cruzar `Estado_Fibra` (Input) con `Uso_Recomendado` (CSV 5).
+3. **Cálculo de Mezcla:** - Buscar `Gramos` en `consumo_insumos.csv` según Largo/Densidad.
+   - Multiplicar `Gramos` por el `Ratio` de la tabla correspondiente para obtener el `ML_Oxidante`.
+4. **Sugerencias de Seguridad:** Si `Volumen_Ox` >= 30, disparar alerta de **Bond Hero**.
