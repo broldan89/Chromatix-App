@@ -5,36 +5,42 @@ Este documento define el comportamiento funcional de los componentes visuales y 
 ---
 
 ## 1. Pantalla de Inicio (Dashboard)
-- **Botón "Nuevo Diagnóstico":** Inicia el algoritmo de cálculo.
+- **Botón "Nuevo Diagnóstico":** Inicia el flujo de cálculo.
 - **Botón "Calculadora Libre":** Acceso rápido a ratios de mezcla (`mezclas_ratio.csv`).
 - **Sección "Trabajos Recientes":** Lista las últimas 3 entradas del historial de clientes.
 
 ## 2. Flujo de Diagnóstico (Input)
+### A. Parámetros de Color
 - **Selector de Nivel Natural (1-10):** Define el `Fondo_Revelado` inicial.
 - **Selector de Nivel Deseado (1-10):** Calcula el salto de niveles ($Deseado - Natural$).
-- **Switch de Canas (Sí/No):** Si es "Sí", el sistema prioriza la serie natural (.0) para cobertura.
+- **Switch de Canas (Sí/No):** Si es "Sí", prioriza serie natural (.0).
 
-## 3. Reglas de Asistencia Técnica (Cuidado de la Fibra) 🛡️
-El sistema debe disparar sugerencias automáticas de productos aditivos según el riesgo químico:
+### B. Estructura Capilar (Nuevo ⚖️)
+- **Selector de Largo:** Corto, Medio, Largo.
+- **Selector de Densidad:** Baja, Media, Alta.
+- **Estado de Fibra:** Saludable, Sensibilizado, Poroso.
 
+## 3. Inteligencia de Bifurcación (Tinte vs. Decoloración) 🧠
+- **Regla:** Si `Salto_Niveles` > 4, el sistema oculta el resultado de tinte y muestra: *"⚠️ Salto extremo detectado. Se recomienda pasar al Módulo de Decoloración"*.
+- **Selección de Bleach:** - Si "Sensibilizado" -> Sugerir **Bleach 7**.
+    - Si "Base < 4" + "Deseado > 8" -> Sugerir **Bleach 9**.
+
+## 4. Reglas de Asistencia Técnica (Cuidado & Upselling) 🛡️
 | Condición Técnica | Sugerencia Automática | Producto Recomendado |
 | :--- | :--- | :--- |
-| Si `Volumen_Ox` >= 30 Vol | "Proteger estructura capilar" | **Bond Hero** (5ml por mezcla) |
-| Si `Salto_Niveles` > 3 | "Reforzar enlaces de queratina" | **Bond Hero** |
+| Si `Volumen_Ox` >= 30 Vol | "Proteger estructura capilar" | **Bond Hero** (5ml) |
 | Si `Tipo_Servicio` == "Decoloración" | "Protección de piel sensible" | **Scalp Protector** |
-| Si `Fondo_Revelado` == Amarillo/Naranja | "Matización de alta potencia" | **Reflejo .21 (Irisado Ceniza)** |
+| Si `Porosidad` == "Alta" | "Ajuste de absorción" | **+10% mezcla adicional** |
+| Si `Fondo` == Amarillo/Naranja | "Matización de alta potencia" | **Reflejo .21 (Irisado)** |
 
-## 4. Pantalla de Resultados (Output)
-- **Tarjeta de Fórmula:** Muestra Tono Sugerido + Volumen de Oxidante.
-- **Módulo de Mezcla:** Gramaje exacto basado en el `Ratio`.
-- **🛒 Botón "Confirmar & Descontar":** - Al presionar, se restan los gramos/ml del inventario local.
-    - Si el stock de un tinte o aditivo baja del 20%, genera una alerta en la **Smart Shopping List**.
-
-## 5. Módulo de Pedidos (Supply Chain)
-- **Lógica:** Si un producto sugerido (ej. Bond Hero) no está en stock según el inventario del salón, mostrar botón: **"Pedir a Distribuidora ahora"**.
+## 5. Pantalla de Resultados (Output)
+- **Tarjeta de Fórmula:** Muestra Tono Sugerido + Volumen de Oxidante + Tiempo de Exposición.
+- **Dosificación Exacta:** Basada en `consumo_insumos.csv`, muestra gramos/ml precisos según Largo y Densidad.
+- **🛒 Botón "Confirmar & Descontar":** Al presionar, descuenta stock del inventario local.
+- **Botón "Pedir Stock":** Aparece si el producto sugerido no tiene existencia.
 
 ---
 
 ## 🛠️ Notas para el Desarrollador
-- **Prioridad de Seguridad:** El sistema nunca debe sugerir 40 Vol en cabellos declarados como "Sensibilizados" por el usuario.
-- **Interconectividad:** La sugerencia de Bond Hero debe aparecer como un "Pop-up" antes de mostrar la fórmula final para fomentar el upselling técnico.
+- **Cálculo de Mezcla:** El sistema debe multiplicar el `Gramos_Tinte` o `Gramos_Polvo` de la tabla de consumos por el `Ratio` correspondiente.
+- **Interconectividad:** La sugerencia de Bond Hero debe ser un paso obligatorio (Pop-up) antes de ver la mezcla final.
