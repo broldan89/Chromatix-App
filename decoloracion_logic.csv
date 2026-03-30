@@ -1,4 +1,5 @@
-Fondo_Objetivo,Oxidante_Sugerido,Proporcion,Tiempo_Max_Min,Uso_Recomendado
-Nivel_8_Amarillo_Naranja,20_Vol,1:2,45,Cabello_Sensibilizado
-Nivel_9_Amarillo_Claro,30_Vol,1:2,50,Cabello_Virgen_Resistente
-Nivel_10_Blanco_Manteca,20_Vol,1:2,60,Doble_Proceso_Suave
+Producto,Fondo_Objetivo,Oxidante_Sugerido,Proporcion,Tiempo_Max_Min,Uso_Recomendado
+Bleach_7,Nivel_8_Amarillo_Naranja,20_Vol,1:2,45,Cabello_Sensibilizado_o_Fino
+Bleach_7,Nivel_9_Amarillo_Claro,30_Vol,1:2,50,Cabello_Natural_Normal
+Bleach_9,Nivel_9_Amarillo_Claro,20_Vol,1:2,45,Limpieza_de_Pigmentos_Dificiles
+Bleach_9,Nivel_10_Blanco_Manteca,30_Vol,1:2,60,Bases_Oscuras_Resistentes
