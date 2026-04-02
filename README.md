@@ -1,31 +1,32 @@
-# 🌈 Chromatix
+# 🌈 Chromatix: The Color OS
 <p align="center">
   <img src="assets/dashboard_mockup.png" width="350" title="Chromatix Interface">
 </p>
 
 ---
-> **El sistema operativo de la colorimetría profesional.**
+> **El primer sistema operativo de colorimetría profesional agnóstico.**
 
-Chromatix es un asistente inteligente diseñado para eliminar el error humano en el salón. Transforma el diagnóstico visual en fórmulas químicas exactas, optimizando el uso de insumos y garantizando resultados predecibles.
+Chromatix es un asistente inteligente diseñado para eliminar el error humano en el salón. Transforma el diagnóstico visual en **algoritmos de precisión química**, optimizando el inventario y garantizando resultados 100% predecibles.
 
 ---
 
-## 🚀 Propuesta de Valor
-- **Arquitectura Universal:** Motor lógico agnóstico capaz de procesar cualquier marca (Implementación inicial: **Yellow Professional**).
-- **Precisión Química:** Basado en el círculo cromático y fondos de aclaración reales.
-- **Eficiencia Operativa:** Cálculo automático de ratios de mezcla y tiempos de exposición.
-- **Memoria Técnica:** Historial digital de trabajos realizados por clienta.
+## 🚀 Propuesta de Valor (MVP)
+- **Arquitectura Universal:** Motor lógico agnóstico capaz de procesar cualquier marca (Lanzamiento inicial: **Yellow Professional**).
+- **Precisión Algorítmica:** Basado en el círculo cromático, fondos de aclaración reales y leyes de neutralización.
+- **Eficiencia Operativa:** Cálculo automático de ratios de mezcla (gramajes exactos) y tiempos de exposición.
+- **Seguridad Capilar:** Alertas automáticas de salud de la fibra y sugerencia de aditivos (Bond Hero/Scalp Protector).
 
-## 🧠 El "Motor" (Core Logic)
-El corazón de Chromatix reside en su lógica de intersección:
-1. **Input:** Nivel Inicial + Nivel Objetivo + % de Canas.
-2. **Proceso:** Cálculo de aclarado -> Selección de Oxidante -> Identificación de Fondo Revelado -> Sugerencia de Reflejo Neutralizador.
-3. **Output:** Fórmula exacta (ej. 8.21 + 40 Vol) + Timer automático.
+## 🧠 El Engine (Core Logic)
+El corazón de Chromatix reside en su lógica de intersección de datos:
+1. **Input:** Nivel Inicial + Nivel Objetivo + % de Canas + Densidad/Largo.
+2. **Proceso:** Cálculo de salto térmico -> Selección de Oxidante -> Identificación de Fondo Revelado -> Match de Reflejo Neutralizador.
+3. **Output:** Fórmula exacta (ej. 45g 8.21 + 67.5ml 30 Vol) + Timer inteligente.
 
 ## 📁 Estructura del Repositorio
-- `/data`: Bases de datos técnicas (archivos .csv extraídos del Master Sheets).
-- `/docs`: Plan de negocios, estrategia y capturas del sistema de diseño en Figma.
-- `/src`: Código fuente de la aplicación (en desarrollo).
+- [🚀 **Technical Brief**](/docs/TECHNICAL_BRIEF.md): Especificaciones de ingeniería y reglas de negocio para desarrolladores.
+- [/data](/data): Bases de datos técnicas (CSV/JSON) extraídas de validaciones reales de campo.
+- [/docs](/docs): Documentación estratégica, Roadmap y lógica de interfaz (UI).
+- [/src](/src): Código fuente de la aplicación (Arquitectura proyectada en **React Native**).
 
 ---
-*Chromatix: Escalando el arte del colorista a una ciencia exacta.*
+*Chromatix: De la intuición del colorista a la precisión del algoritmo.*
