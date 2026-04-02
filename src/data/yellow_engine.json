@@ -1,0 +1,30 @@
+{
+  "brand": "Yellow Professional",
+  "version": "1.0.0",
+  "settings": {
+    "units": "grams/milliliters",
+    "default_ratio": 1.5,
+    "timer_mode": "countdown"
+  },
+  "matrices": {
+    "lift_logic": [
+      { "jump": 1, "vol": 10, "time": 25, "coverage_canas": "100%" },
+      { "jump": 2, "vol": 20, "time": 35, "coverage_canas": "100%" },
+      { "jump": 3, "vol": 30, "time": 45, "coverage_canas": "50-70%" },
+      { "jump": 4, "vol": 40, "time": 50, "coverage_canas": "Limited" }
+    ],
+    "neutralization": [
+      { "target_level": 5, "pigment": "Rojo-Naranja", "suggested_tone": ".1", "alternative": ".21" },
+      { "target_level": 6, "pigment": "Naranja", "suggested_tone": ".1", "alternative": ".11" },
+      { "target_level": 7, "pigment": "Naranja-Amarillo", "suggested_tone": ".21", "alternative": ".1" },
+      { "target_level": 8, "pigment": "Amarillo", "suggested_tone": ".2", "alternative": ".21" },
+      { "target_level": 9, "pigment": "Amarillo Claro", "suggested_tone": ".2", "alternative": ".102" }
+    ],
+    "consumption_rates": {
+      "raiz": { "tinte": 30, "oxidante": 45 },
+      "corto_densidad_media": { "tinte": 60, "oxidante": 90 },
+      "medio_densidad_alta": { "tinte": 90, "oxidante": 135 },
+      "largo_densidad_pro": { "tinte": 120, "oxidante": 180 }
+    }
+  }
+}
