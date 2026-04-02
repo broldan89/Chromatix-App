@@ -1,17 +1,18 @@
 {
   "brand": "Yellow Professional",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "settings": {
     "units": "grams/milliliters",
     "default_ratio": 1.5,
-    "timer_mode": "countdown"
+    "timer_mode": "countdown",
+    "max_lift_limit": 4
   },
   "matrices": {
     "lift_logic": [
-      { "jump": 1, "vol": 10, "time": 25, "coverage_canas": "100%" },
-      { "jump": 2, "vol": 20, "time": 35, "coverage_canas": "100%" },
-      { "jump": 3, "vol": 30, "time": 45, "coverage_canas": "50-70%" },
-      { "jump": 4, "vol": 40, "time": 50, "coverage_canas": "Limited" }
+      { "jump": 1, "vol": 10, "time_base": 25, "coverage_canas": "100%" },
+      { "jump": 2, "vol": 20, "time_base": 35, "coverage_canas": "100%" },
+      { "jump": 3, "vol": 30, "time_base": 45, "coverage_canas": "50-70%" },
+      { "jump": 4, "vol": 40, "time_base": 50, "coverage_canas": "Limited" }
     ],
     "neutralization": [
       { "target_level": 5, "pigment": "Rojo-Naranja", "suggested_tone": ".1", "alternative": ".21" },
@@ -26,7 +27,25 @@
         { "range": "30-50%", "natural_ratio": 0.25, "tone_ratio": 0.75, "note": "Mezclar con serie Natural" },
         { "range": "50-100%", "natural_ratio": 0.5, "tone_ratio": 0.5, "note": "Mezclar con serie Natural 1:1" }
       ],
-      "series_recommendation": "Natural / Intense Natural (Yellow Series .0 / .00)"
+      "series_recommendation": "Natural / Intense Natural (Yellow Series .0 / .00)",
+      "modifiers": {
+        "type": {
+          "standard": { "extra_time": 0, "ratio_mod": 0 },
+          "resistant": { "extra_time": 10, "ratio_mod": "force_1:1", "note": "Cana de médula gruesa" }
+        }
+      }
+    },
+    "dynamic_modifiers": {
+      "porosity": {
+        "low": { "time_adj": 5, "vol_adj": 0, "note": "Requiere ablandamiento" },
+        "medium": { "time_adj": 0, "vol_adj": 0 },
+        "high": { "time_adj": -10, "vol_adj": -10, "note": "Absorción rápida, reducir tiempo y volumen" }
+      },
+      "retention_loop": {
+        "base_days": { "roots": 28, "global": 45 },
+        "wash_penalty": { "daily": -7, "twice_week": 0 },
+        "exposure_penalty": { "high_sun": -5, "pool_sea": -10 }
+      }
     },
     "tone_compensation_logic": {
       "cool_tones": [".1", ".21", ".11", ".8"],
@@ -62,14 +81,6 @@
         }
       }
     },
-    "consumption_rates": {
-      "raiz": { "tinte": 30, "oxidante": 45 },
-      "corto_densidad_media": { "tinte": 60, "oxidante": 90 },
-      "medio_densidad_alta": { "tinte": 90, "oxidante": 135 },
-      "largo_densidad_pro": { "tinte": 120, "oxidante": 180 }
-    }
-  }
-}
     "consumption_rates": {
       "raiz": { "tinte": 30, "oxidante": 45 },
       "corto_densidad_media": { "tinte": 60, "oxidante": 90 },
