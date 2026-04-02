@@ -1,53 +1,74 @@
-# 📋 Esquema Universal de Ficha Clínica: Chromatix
+📋 Especificación Técnica del Schema de Cliente
+Este documento define la estructura de datos para la persistencia de información en Chromatix. Se divide en dos entidades: Perfil Permanente (estático) y Registro de Servicio (dinámico/log).
 
-Este documento define la estructura de datos obligatoria para el registro de clientes. El objetivo es transformar la atención convencional en un **Service de Ingeniería Capilar**, garantizando trazabilidad técnica y seguridad legal.
+1. Perfil del Cliente (client_profile)
+Datos de salud, identidad y características base que persisten entre visitas.
 
----
+Campo	Tipo	Valores / Ejemplo	Descripción
+id	UUID	550e8400-e29b...	Identificador único del cliente.
+name	String	"Lucía Pérez"	Nombre completo.
+phone	String	"+54 9 341 123456"	Contacto principal.
+birth_date	Date	1990-05-15	Para cálculo de edad y fidelización.
+Alertas Médicas	Object		
+allergies	Array	["PPD", "Látex"]	Dispara alertas críticas en la mezcla.
+medications	String	"Levotiroxina"	Medicamentos que afectan la porosidad/fijación.
+hormonal_status	Enum	none, pregnancy, lactation, menopause	Factores de alteración química.
+ADN Capilar	Object		
+natural_base	Number	4, 5, 6	Altura de tono natural base.
+scalp_type	Enum	normal, oily, dry, sensitive	Alimenta al Guardian.
+active_treatments	Array	["keratin", "straightening"]	Procesos vigentes en la fibra.
+2. Registro de Servicio (service_record)
+Historial de visitas (Service Log) con Feedback Loop.
 
-## 1. Identidad y Fidelización (Personal Data)
-*Datos para la gestión del cliente y marketing.*
-- **Perfil:** Nombre, edad y contacto.
-- **Origen:** Canal por el cual llegó (Recomendación, Instagram, Google). Permite medir el ROI del marketing del salón.
-- **Estilo de Comunicación:** Notas sobre si la clienta es detallista, prefiere rapidez o busca asesoramiento profundo.
+A. Diagnóstico de Entrada (Inputs del Profesional)
 
-## 2. Alertas Críticas (Medical & Safety)
-*El "Seguro de Vida" del profesional.*
-- **Alergias:** Registro obligatorio de reacciones a parafenilendiamina (PPD), látex o fragancias.
-- **Estado Hormonal:** Registro de embarazo, lactancia o tratamientos de tiroides (factores que alteran la fijación del color).
-- **Consentimiento Informado:** Confirmación de firma digital para servicios de alto impacto químico.
+Estos campos son obligatorios para que el Yellow_engine calcule los modificadores dinámicos:
 
-## 3. ADN de la Fibra (Hair Baseline)
-*Diagnóstico físico inicial.*
-- **Arquitectura:** Tipo (liso/afro), textura (fino/grueso) y densidad.
-- **Porosidad:** Nivel de absorción de la cutícula (Baja, Media, Alta).
-- **Cuero Cabelludo:** Dermatología básica (Graso, sensible, presencia de caspa o descamación).
+fiber_integrity: (virgin, processed, damaged, critically_damaged).
 
-## 4. Legado Químico (Chemical History)
-*Lo que el cabello "recuerda" de procesos anteriores.*
-- **Historial de Color:** Marcas y tonos usados previamente.
-- **Procesos Térmicos/Químicos:** Keratinas, alisados y cantidad de decoloraciones acumuladas.
-- **Prueba de Hebra:** Resultado de elasticidad y resistencia antes de proceder.
+porosity: (low, medium, high).
 
-## 5. Rutina de Mantenimiento (Home Care)
-*Análisis de hábitos para potenciar la venta de insumos.*
-- **Frecuencia de Lavado:** Impacta directamente en la duración del reflejo.
-- **Herramientas de Calor:** Uso de planchas y secadores (¿Usa protector térmico?).
-- **Inventario Personal:** Qué productos usa actualmente (Oportunidad de reemplazo por productos profesionales).
+gray_hair:
 
-## 6. Registro del Service (Technical Log)
-*La "Caja Negra" de cada visita.*
-- **Diagnóstico del Día:** Motivo de consulta y expectativas reales.
-- **Ejecución Técnica:**
-  - **Fórmula:** Cruzada con el `yellow_engine.json`.
-  - **Oxidante:** Volumen y técnica de aplicación.
-  - **Aditivos:** Uso de Bond Hero o Scalp Protector.
-- **Resultados:** Observaciones del profesional sobre cómo respondió la fibra y registro fotográfico (Antes/Después).
+percentage: 0 a 100.
 
-## 7. Retención y Seguimiento (Post-Service)
-*El "Service Vehicular" (Próximo Cambio de Aceite).*
-- **Gap de Venta:** Productos recomendados vs. Productos comprados.
-- **Ciclo de Retorno:** Cálculo automático de días para el próximo retoque (Canas: 21-28 días | Color: 35-45 días).
-- **Restricciones:** Cuidados inmediatos (ej. no lavar por 48hs).
+type: (standard, resistant).
 
----
-> **Nota para el Desarrollador:** Todos los campos marcados como "Medical" deben disparar alertas visuales (Rojo/Amarillo) en la interfaz de mezcla si presentan condiciones de riesgo.
+distribution: (uniform, temples, crown, scattered).
+
+B. Ejecución Técnica
+
+formula_calculated: Objeto con gramos de tinte, vol de oxidante y aditivos.
+
+timer_result: Tiempo final (Base +/- Modificadores).
+
+informed_consent: Boolean. Registro de que el profesional comunicó los riesgos detectados por el Guardian.
+
+C. Feedback Loop (Cierre del Círculo)
+
+Al finalizar, el profesional debe registrar el resultado real para ajustar futuras fórmulas:
+
+achieved_level: Altura de tono alcanzada realmente.
+
+tone_deviation: (perfect, too_warm, too_cool, uneven).
+
+coverage_result: (complete, partial, failed).
+
+observations: Texto libre (ej: "Saturar más en zona de sienes").
+
+3. Lógica de Retención Dinámica (retention_loop)
+El intervalo para la próxima cita se calcula cruzando el service_record con los hábitos del cliente:
+
+Input de Hábito	Impacto en Fecha
+wash_frequency	daily (-7 días) / standard (0)
+sun_exposure	high (-5 días)
+pool_sea_exposure	yes (-10 días)
+Fórmula de cálculo:
+Fecha_Hoy + Intervalo_Base(28/45) + Modificadores_Hábitos = Fecha_Sugerida_Retorno
+
+4. Privacidad y Seguridad (Data Privacy)
+Almacenamiento Local (MVP): Los datos se guardan cifrados en el dispositivo del profesional (SQLite / EncryptedStorage).
+
+Propiedad: El profesional es el custodio de los datos de salud bajo su responsabilidad técnica.
+
+Migración: El paso a Cloud requerirá encriptación End-to-End (E2EE) para cumplimiento de normativas de datos de salud.
