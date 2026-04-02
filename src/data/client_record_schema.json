@@ -1,0 +1,31 @@
+{
+  "client_metadata": {
+    "full_name": "Nombre de la Clienta",
+    "phone_contact": "+54 9 341 XXX-XXXX",
+    "first_visit": "YYYY-MM-DD",
+    "notes_sensibilidad": "Alergias o cuero cabelludo sensible"
+  },
+  "service_record": [
+    {
+      "service_id": "ID_UNICO_TRANSACCION",
+      "timestamp": "2026-04-02T17:07:37",
+      "diagnosis": {
+        "starting_base": 5,
+        "target_level": 7.1,
+        "gray_percentage": "50%",
+        "hair_condition": "Sensibilizado"
+      },
+      "final_formula": {
+        "tint_1": "30g 7.0",
+        "tint_2": "30g 7.1",
+        "oxidant": "90ml 20 Vol",
+        "additives": ["Bond Hero 5ml", "Scalp Protector"]
+      },
+      "post_service": {
+        "maintenance_sold": ["Shampoo Color Care"],
+        "next_service_interval_days": 28,
+        "photo_ref_id": "img_001.jpg"
+      }
+    }
+  ]
+}
