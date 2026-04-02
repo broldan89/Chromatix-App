@@ -1,6 +1,6 @@
 # 🌈 Chromatix
 <p align="center">
-  <img src="dashboard_mockup.png" width="350" title="Chromatix Interface">
+  <img src="assets/dashboard_mockup.png" width="350" title="Chromatix Interface">
 </p>
 
 ---
