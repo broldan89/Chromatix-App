@@ -23,10 +23,10 @@ El corazón de Chromatix reside en su lógica de intersección de datos:
 3. **Output:** Fórmula exacta (ej. 45g 8.21 + 67.5ml 30 Vol) + Timer inteligente.
 
 ## 📁 Estructura del Repositorio
-- [🚀 **Technical Brief**](/docs/TECHNICAL_BRIEF.md): Especificaciones de ingeniería y reglas de negocio para desarrolladores.
-- [/data](/data): Bases de datos técnicas (CSV/JSON) extraídas de validaciones reales de campo.
-- [/docs](/docs): Documentación estratégica, Roadmap y lógica de interfaz (UI).
-- [/src](/src): Código fuente de la aplicación (Arquitectura proyectada en **React Native**).
+- [🚀 **Technical Brief**](/docs/TECHNICAL_BRIEF.md): Estrategia de ingeniería, reglas del "Guardian" y lógica de negocio.
+- [📋 **Client Schema**](/docs/CLIENT_SCHEMA.md): Contrato de datos para la Ficha Clínica y el Feedback Loop (Historia Clínica).
+- [🧠 **Yellow Engine**](/src/data/Yellow_engine.json): El "Cerebro" con las matrices de mezcla, tiempos y seguridad de Yellow Professional.
+- [🗺️ **Roadmap**](/docs/ROADMAP_2026.md): Fases de desarrollo (MVP, CRM, Cloud).
 
 ---
 *Chromatix: De la intuición del colorista a la precisión del algoritmo.*
