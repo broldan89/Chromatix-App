@@ -1,6 +1,6 @@
 {
   "brand": "Yellow Professional",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "settings": {
     "units": "grams/milliliters",
     "default_ratio": 1.5,
@@ -42,6 +42,34 @@
         }
       }
     },
+    "safety_protocols": {
+      "hair_condition": {
+        "sensibilizado": {
+          "restricted_vol": [30, 40],
+          "mandatory_additive": "Bond Hero (5ml cada 30g de color)",
+          "recommendation": "Bajar un tono el objetivo para trabajar con 20 Vol."
+        },
+        "muy_sensibilizado": {
+          "restricted_vol": [20, 30, 40],
+          "allowed_vol": [5, 10],
+          "mandatory_action": "Sugerir servicio de Tonalización en lugar de Tinte Permanente."
+        }
+      },
+      "scalp_condition": {
+        "sensible": {
+          "mandatory_additive": "Scalp Protector",
+          "ui_alert": "⚠️ Cuero cabelludo sensible. Aplicar Scalp Protector antes de comenzar."
+        }
+      }
+    },
+    "consumption_rates": {
+      "raiz": { "tinte": 30, "oxidante": 45 },
+      "corto_densidad_media": { "tinte": 60, "oxidante": 90 },
+      "medio_densidad_alta": { "tinte": 90, "oxidante": 135 },
+      "largo_densidad_pro": { "tinte": 120, "oxidante": 180 }
+    }
+  }
+}
     "consumption_rates": {
       "raiz": { "tinte": 30, "oxidante": 45 },
       "corto_densidad_media": { "tinte": 60, "oxidante": 90 },
