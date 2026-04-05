@@ -1,0 +1,30 @@
+Ficha Maestra
+Bloque A: Identidad y Contacto
+
+Aquí tienes la tabla con los espacios rellenos de guiones, buscando el mejor equilibrio visual para que el texto quede centrado en cada columna:
+
+|-----Campo-----|---Tipo---|--Requerido-|-------------------------Notas--------------------------|
+|-------id------|---UUID---|-----✅-----|------Identificador único generado por el sistema.------|
+|---full_name---|--String--|-----✅-----|------------Nombre completo de la clienta.--------------|
+|-----phone-----|--String--|-----✅-----|-------Contacto principal (formato internacional)-------|
+|---instagram---|--String--|------—-----|-----Handle sin "@" para acciones de fidelización-------|
+|---birth_date--|---Date---|------—-----|----Para cálculo de edad y marketing (YYYY-MM-DD)-------|
+
+Base crítica para el módulo Guardian.
+
+allergies: Array de objetos (alérgeno, severidad, notas). Crucial para PPD y Látex.
+
+patch_test: Objeto con performed (boolean) y result (negative/mild/positive).
+
+medications: Listado de medicamentos que afectan la porosidad o fijación (ej. Levotiroxina).
+
+hormonal_status: Enum (none, pregnancy, lactation, menopause, hormonal_treatment).
+
+Bloque C: ADN Capilar y Cuero Cabelludo
+
+|-------Campo-------|---Tipo---|---------------------Valores / Ejemplo----------------------|
+|-----hair_type-----|---Enum---|--------------straight, wavy, curly, coily------------------|
+|----natural_base---|--Number--|---------------Altura de tono base (1-10)-------------------|
+|-----scalp_type----|---Enum---|---------normal, oily, dry, sensitive, mixed----------------|
+|--scalp_conditions-|--Array---|------dandruff, psoriasis, alopecia, irritation-------------|
+|--chemical_history-|--Object--|--bleaching_count (int), active_treatments (keratin, etc)---|
