@@ -1,30 +1,325 @@
-Ficha Maestra
-Bloque A: Identidad y Contacto
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "chromatix/client_profile",
+  "title": "Client Profile",
+  "description": "Perfil persistente de la clienta. Se crea una vez y se actualiza en cada visita. No incluye registros de servicios (ver service_record_schema.json).",
+  "version": "1.0.0",
+  "type": "object",
+  "required": ["id", "personal_data", "hair_profile", "scalp_profile", "health_profile", "consent"],
 
-Aquí tienes la tabla con los espacios rellenos de guiones, buscando el mejor equilibrio visual para que el texto quede centrado en cada columna:
+  "properties": {
 
-|-----Campo-----|---Tipo---|--Requerido-|-------------------------Notas--------------------------|
-|-------id------|---UUID---|-----✅-----|------Identificador único generado por el sistema.------|
-|---full_name---|--String--|-----✅-----|------------Nombre completo de la clienta.--------------|
-|-----phone-----|--String--|-----✅-----|-------Contacto principal (formato internacional)-------|
-|---instagram---|--String--|------—-----|-----Handle sin "@" para acciones de fidelización-------|
-|---birth_date--|---Date---|------—-----|----Para cálculo de edad y marketing (YYYY-MM-DD)-------|
+    "id": {
+      "type": "string",
+      "description": "UUID único generado automáticamente al crear la ficha.",
+      "example": "a3f2c1d4-89ab-4cde-b012-3456789abcde"
+    },
 
-Base crítica para el módulo Guardian.
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Fecha y hora de creación de la ficha."
+    },
 
-allergies: Array de objetos (alérgeno, severidad, notas). Crucial para PPD y Látex.
+    "updated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Fecha y hora de la última modificación."
+    },
 
-patch_test: Objeto con performed (boolean) y result (negative/mild/positive).
+    "assigned_stylist_id": {
+      "type": "string",
+      "description": "ID del profesional responsable de esta ficha."
+    },
 
-medications: Listado de medicamentos que afectan la porosidad o fijación (ej. Levotiroxina).
+    "referral_source": {
+      "type": "string",
+      "enum": ["recommendation", "instagram", "google", "walk_in", "other"],
+      "description": "Cómo llegó la clienta al salón."
+    },
 
-hormonal_status: Enum (none, pregnancy, lactation, menopause, hormonal_treatment).
+    "personal_data": {
+      "type": "object",
+      "required": ["full_name", "phone"],
+      "properties": {
+        "full_name":    { "type": "string" },
+        "birth_date":   { "type": "string", "format": "date" },
+        "phone":        { "type": "string" },
+        "email":        { "type": "string", "format": "email" },
+        "instagram":    { "type": "string", "description": "Handle sin @, opcional." },
+        "notes":        { "type": "string", "description": "Notas personales del estilista sobre la clienta (trato, preferencias de comunicación, etc.)." }
+      }
+    },
 
-Bloque C: ADN Capilar y Cuero Cabelludo
+    "hair_profile": {
+      "type": "object",
+      "description": "Características del cabello. Se actualiza si cambian.",
+      "required": ["hair_type", "texture", "density", "length", "porosity", "overall_condition"],
+      "properties": {
 
-|-------Campo-------|---Tipo---|---------------------Valores / Ejemplo----------------------|
-|-----hair_type-----|---Enum---|--------------straight, wavy, curly, coily------------------|
-|----natural_base---|--Number--|---------------Altura de tono base (1-10)-------------------|
-|-----scalp_type----|---Enum---|---------normal, oily, dry, sensitive, mixed----------------|
-|--scalp_conditions-|--Array---|------dandruff, psoriasis, alopecia, irritation-------------|
-|--chemical_history-|--Object--|--bleaching_count (int), active_treatments (keratin, etc)---|
+        "hair_type": {
+          "type": "string",
+          "enum": ["straight", "wavy", "curly", "coily"],
+          "description": "Tipo de cabello: liso, ondulado, rizado, afro."
+        },
+        "texture": {
+          "type": "string",
+          "enum": ["fine", "medium", "thick"]
+        },
+        "density": {
+          "type": "string",
+          "enum": ["low", "medium", "high"]
+        },
+        "length": {
+          "type": "string",
+          "enum": ["short", "medium", "long", "extra_long"],
+          "description": "short = hasta mandíbula, medium = hasta hombros, long = hasta cintura, extra_long = más largo."
+        },
+        "porosity": {
+          "type": "string",
+          "enum": ["low", "medium", "high"],
+          "description": "Nivel de porosidad. Afecta directamente el tiempo de exposición y el volumen de oxidante recomendado."
+        },
+        "overall_condition": {
+          "type": "string",
+          "enum": ["virgin", "healthy_processed", "processed", "highly_processed", "damaged"],
+          "description": "Estado general de la fibra considerando el historial acumulado de procesos."
+        },
+
+        "gray_profile": {
+          "type": "object",
+          "description": "Perfil de canas. Null si no hay canas.",
+          "properties": {
+            "percentage": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100,
+              "description": "Porcentaje estimado de canas sobre el total del cabello."
+            },
+            "distribution": {
+              "type": "string",
+              "enum": ["none", "uniform", "concentrated_temples", "concentrated_crown", "scattered"],
+              "description": "Distribución espacial de las canas."
+            },
+            "gray_type": {
+              "type": "string",
+              "enum": ["standard", "resistant"],
+              "description": "Canas estándar o rebeldes (médula gruesa, requieren técnica especial)."
+            }
+          }
+        },
+
+        "active_treatments": {
+          "type": "array",
+          "description": "Tratamientos activos en la fibra que condicionan los servicios disponibles.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "treatment_type": {
+                "type": "string",
+                "enum": ["keratin", "brazilian_blowout", "nanoplasty", "permanent_straightening", "perm", "none"]
+              },
+              "application_date": { "type": "string", "format": "date" },
+              "estimated_duration_weeks": { "type": "integer" },
+              "notes": { "type": "string" }
+            }
+          }
+        },
+
+        "previous_chemical_history": {
+          "type": "object",
+          "description": "Historial de procesos químicos anteriores a la ficha actual.",
+          "properties": {
+            "color_treatments": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "treatment_type": {
+                    "type": "string",
+                    "enum": ["global_color", "highlights", "balayage", "toning", "root_retouch"]
+                  },
+                  "approx_date":   { "type": "string", "format": "date" },
+                  "brand_used":    { "type": "string" },
+                  "level_achieved":{ "type": "integer", "minimum": 1, "maximum": 10 },
+                  "notes":         { "type": "string" }
+                }
+              }
+            },
+            "bleaching_count": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Cantidad aproximada de decoloraciones acumuladas en la fibra actual."
+            },
+            "last_bleach_date": { "type": "string", "format": "date" },
+            "current_base_level": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10,
+              "description": "Nivel actual real del cabello antes de cualquier servicio."
+            }
+          }
+        }
+      }
+    },
+
+    "scalp_profile": {
+      "type": "object",
+      "description": "Estado del cuero cabelludo.",
+      "required": ["scalp_type", "sensitivity"],
+      "properties": {
+        "scalp_type": {
+          "type": "string",
+          "enum": ["normal", "oily", "dry", "mixed"]
+        },
+        "sensitivity": {
+          "type": "string",
+          "enum": ["low", "medium", "high"]
+        },
+        "conditions": {
+          "type": "array",
+          "description": "Condiciones diagnosticadas o referidas por la clienta.",
+          "items": {
+            "type": "string",
+            "enum": ["dandruff", "seborrheic_dermatitis", "psoriasis", "folliculitis", "alopecia", "irritation", "none"]
+          }
+        },
+        "hair_loss_concern": {
+          "type": "boolean",
+          "description": "La clienta refiere o se observa caída activa del cabello."
+        },
+        "scalp_notes": { "type": "string" }
+      }
+    },
+
+    "health_profile": {
+      "type": "object",
+      "description": "Datos de salud relevantes para la seguridad del servicio. Confidencial.",
+      "properties": {
+
+        "allergies": {
+          "type": "array",
+          "description": "Alergias conocidas.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "allergen": {
+                "type": "string",
+                "enum": ["ppd", "resorcinol", "ammonia", "fragrances", "latex", "nickel", "formaldehyde", "other"]
+              },
+              "severity":  { "type": "string", "enum": ["mild", "moderate", "severe"] },
+              "notes":     { "type": "string" }
+            }
+          }
+        },
+
+        "patch_test": {
+          "type": "object",
+          "description": "Registro de la prueba de alergia realizada.",
+          "properties": {
+            "performed":    { "type": "boolean" },
+            "date":         { "type": "string", "format": "date" },
+            "result":       { "type": "string", "enum": ["negative", "mild_reaction", "positive"] },
+            "product_used": { "type": "string" }
+          }
+        },
+
+        "strand_test": {
+          "type": "object",
+          "description": "Registro de la prueba de hebra.",
+          "properties": {
+            "performed":       { "type": "boolean" },
+            "date":            { "type": "string", "format": "date" },
+            "elasticity_result": { "type": "string", "enum": ["good", "low", "very_low"] },
+            "porosity_result": { "type": "string", "enum": ["low", "medium", "high"] },
+            "notes":           { "type": "string" }
+          }
+        },
+
+        "current_medications": {
+          "type": "array",
+          "description": "Medicamentos actuales que pueden afectar el resultado del servicio o contraindicarlo.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "medication_type": {
+                "type": "string",
+                "enum": ["hormonal_contraceptives", "thyroid", "chemotherapy", "antibiotics", "corticosteroids", "antifungals", "other"]
+              },
+              "notes": { "type": "string" }
+            }
+          }
+        },
+
+        "hormonal_status": {
+          "type": "string",
+          "enum": ["none", "pregnant", "breastfeeding", "menopause", "hormonal_treatment"],
+          "description": "Estado hormonal actual. Afecta la recomendación de servicios químicos."
+        },
+
+        "medical_conditions": {
+          "type": "array",
+          "description": "Condiciones médicas relevantes para los servicios capilares.",
+          "items": {
+            "type": "string",
+            "enum": ["diabetes", "lupus", "thyroid_disorder", "autoimmune", "chemotherapy_current", "chemotherapy_recent", "other"]
+          }
+        },
+
+        "health_notes": { "type": "string" }
+      }
+    },
+
+    "home_care_routine": {
+      "type": "object",
+      "description": "Rutina de cuidado en casa. Afecta la velocidad de desgaste y el ciclo de retención.",
+      "properties": {
+        "shampoo_brand":       { "type": "string" },
+        "conditioner_brand":   { "type": "string" },
+        "wash_frequency_per_week": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 14
+        },
+        "heat_tools_use": {
+          "type": "string",
+          "enum": ["never", "occasionally", "frequent", "daily"]
+        },
+        "heat_protectant_use": { "type": "boolean" },
+        "sun_exposure":        { "type": "string", "enum": ["low", "medium", "high"] },
+        "pool_sea_exposure":   { "type": "boolean" },
+        "other_products":      { "type": "string", "description": "Aceites, sérums, tratamientos caseros, etc." }
+      }
+    },
+
+    "lifestyle_notes": {
+      "type": "string",
+      "description": "Notas de estilo de vida relevantes: deporte intenso, agua de pozo, exposición constante al sol, etc."
+    },
+
+    "consent": {
+      "type": "object",
+      "description": "Registro de consentimiento informado.",
+      "required": ["health_declaration_completed", "data_processing_accepted"],
+      "properties": {
+        "health_declaration_completed": {
+          "type": "boolean",
+          "description": "La clienta completó y firmó la declaración de salud."
+        },
+        "health_declaration_date": { "type": "string", "format": "date" },
+        "data_processing_accepted": {
+          "type": "boolean",
+          "description": "La clienta aceptó el tratamiento de sus datos personales y de salud."
+        },
+        "data_processing_date": { "type": "string", "format": "date" }
+      }
+    },
+
+    "service_history_ids": {
+      "type": "array",
+      "description": "Array de IDs de service_record vinculados a esta clienta. Los registros completos viven en service_record_schema.",
+      "items": { "type": "string" }
+    }
+
+  }
+}

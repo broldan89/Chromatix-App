@@ -1,0 +1,93 @@
+{
+  "$id": "chromatix/retention_logic",
+  "title": "Retention Loop Logic",
+  "description": "Reglas para el cálculo dinámico del intervalo de retención (próximo service). El intervalo base se ajusta según los factores de rutina y estilo de vida de la clienta.",
+  "version": "1.0.0",
+
+  "base_intervals_days": {
+    "description": "Intervalos base en días según tipo de servicio.",
+    "root_retouch":         { "min": 21, "max": 28, "default": 25 },
+    "global_color":         { "min": 40, "max": 50, "default": 45 },
+    "highlights":           { "min": 60, "max": 90, "default": 75 },
+    "balayage":             { "min": 90, "max": 120, "default": 105 },
+    "toning":               { "min": 30, "max": 45, "default": 35 },
+    "bleaching_and_toning": { "min": 45, "max": 60, "default": 50 },
+    "keratin":              { "min": 90, "max": 120, "default": 105 },
+    "treatment":            { "min": 30, "max": 45, "default": 30 },
+    "cut":                  { "min": 45, "max": 60, "default": 45 }
+  },
+
+  "adjustment_factors": {
+    "description": "Factores que modifican el intervalo base. Los valores negativos acortan el tiempo hasta el próximo service.",
+
+    "wash_frequency_per_week": {
+      "description": "A mayor frecuencia de lavado, más rápido se pierde el color.",
+      "rules": [
+        { "condition": "<= 2",  "adjustment_days": 5,  "label": "low_wash_frequency" },
+        { "condition": "<= 4",  "adjustment_days": 0,  "label": "medium_wash_frequency" },
+        { "condition": "<= 7",  "adjustment_days": -5, "label": "high_wash_frequency" },
+        { "condition": "> 7",   "adjustment_days": -7, "label": "very_high_wash_frequency" }
+      ]
+    },
+
+    "sun_exposure": {
+      "description": "La exposición solar degrada el color más rápido.",
+      "rules": [
+        { "value": "low",    "adjustment_days": 0,  "label": "low_sun_exposure" },
+        { "value": "medium", "adjustment_days": -3, "label": "medium_sun_exposure" },
+        { "value": "high",   "adjustment_days": -7, "label": "high_sun_exposure" }
+      ]
+    },
+
+    "pool_sea_exposure": {
+      "description": "El cloro y la sal aceleran la decoloración y el fade del tono.",
+      "rules": [
+        { "value": false, "adjustment_days": 0,  "label": "no_pool_sea" },
+        { "value": true,  "adjustment_days": -7, "label": "pool_sea_exposure_active" }
+      ]
+    },
+
+    "heat_tools_use": {
+      "description": "El uso frecuente de calor degrada el color y la fibra más rápido.",
+      "rules": [
+        { "value": "never",       "adjustment_days": 3,  "label": "no_heat" },
+        { "value": "occasionally","adjustment_days": 0,  "label": "occasional_heat" },
+        { "value": "frequent",    "adjustment_days": -3, "label": "frequent_heat" },
+        { "value": "daily",       "adjustment_days": -5, "label": "daily_heat" }
+      ]
+    },
+
+    "porosity_at_service": {
+      "description": "La alta porosidad hace que el color fade más rápido.",
+      "rules": [
+        { "value": "low",    "adjustment_days": 5,  "label": "low_porosity_retention_bonus" },
+        { "value": "medium", "adjustment_days": 0,  "label": "medium_porosity_standard" },
+        { "value": "high",   "adjustment_days": -5, "label": "high_porosity_fast_fade" }
+      ]
+    }
+  },
+
+  "calculation_logic": {
+    "description": "Cómo calcular el intervalo ajustado.",
+    "steps": [
+      "1. Tomar el intervalo default del tipo de servicio.",
+      "2. Sumar todos los adjustment_days de los factores que aplican a esta clienta.",
+      "3. El resultado es el adjusted_interval_days.",
+      "4. Aplicar límite mínimo: nunca menos de 14 días.",
+      "5. Aplicar límite máximo: nunca más de 150 días.",
+      "6. next_service_suggested_date = service_date + adjusted_interval_days."
+    ],
+    "minimum_days": 14,
+    "maximum_days": 150
+  },
+
+  "notification_schedule": {
+    "description": "Cuándo enviar recordatorios al profesional para reagendar.",
+    "reminders": [
+      { "days_before_suggested_date": 7,  "message": "El próximo service de {client_name} es en 7 días." },
+      { "days_before_suggested_date": 3,  "message": "El próximo service de {client_name} es en 3 días. ¿Ya tiene turno?" },
+      { "days_after_suggested_date":  3,  "message": "{client_name} pasó su fecha sugerida de service hace 3 días sin reagendar." },
+      { "days_after_suggested_date":  7,  "message": "Han pasado 7 días desde la fecha sugerida de service de {client_name}." }
+    ]
+  }
+}

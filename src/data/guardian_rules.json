@@ -1,0 +1,192 @@
+{
+  "$id": "chromatix/guardian_rules",
+  "title": "Guardian Rules",
+  "description": "Reglas de negocio del módulo Guardian. Define qué condiciones disparan alertas, advertencias o bloqueos completos antes de aprobar una fórmula.",
+  "version": "1.0.0",
+
+  "hard_stop_rules": [
+    {
+      "rule_id": "HS-001",
+      "name": "Alergia confirmada a PPD o resorcinol",
+      "description": "Si el client_profile registra alergia con severidad moderate o severe a PPD o resorcinol, bloquear cualquier servicio de coloración oxidativa.",
+      "trigger": {
+        "field": "health_profile.allergies",
+        "condition": "any allergen IN ['ppd', 'resorcinol'] AND severity IN ['moderate', 'severe']"
+      },
+      "alert_code": "allergy_risk",
+      "severity": "hard_stop",
+      "message": "La clienta tiene alergia confirmada a componentes del tinte oxidativo. El servicio está contraindicado.",
+      "allowed_override": false
+    },
+    {
+      "rule_id": "HS-002",
+      "name": "Cuero cabelludo con heridas abiertas",
+      "description": "Bloquear cualquier servicio con químicos si el cuero presenta heridas abiertas.",
+      "trigger": {
+        "field": "diagnosis.scalp_condition",
+        "condition": "== 'with_wounds'"
+      },
+      "alert_code": "service_not_recommended",
+      "severity": "hard_stop",
+      "message": "Se detectaron heridas en el cuero cabelludo. No es posible aplicar químicos hasta que cicatricen.",
+      "allowed_override": false
+    },
+    {
+      "rule_id": "HS-003",
+      "name": "Embarazo — servicios con amoniaco o decoloración",
+      "description": "Bloquear decoloraciones y tintes con amoniaco si la clienta está embarazada en primer trimestre.",
+      "trigger": {
+        "field": "health_profile.hormonal_status",
+        "condition": "== 'pregnant'",
+        "additional_condition": "service_type IN ['bleaching', 'bleaching_and_toning', 'global_color']"
+      },
+      "alert_code": "pregnancy_restriction",
+      "severity": "hard_stop",
+      "message": "El servicio solicitado no está recomendado durante el embarazo. Consultar con el médico de la clienta.",
+      "allowed_override": false
+    },
+    {
+      "rule_id": "HS-004",
+      "name": "Quimioterapia en curso",
+      "description": "Bloquear todos los servicios químicos si la clienta está bajo quimioterapia activa.",
+      "trigger": {
+        "field": "health_profile.medical_conditions",
+        "condition": "contains 'chemotherapy_current'"
+      },
+      "alert_code": "service_not_recommended",
+      "severity": "hard_stop",
+      "message": "La clienta está bajo tratamiento de quimioterapia activa. Todos los servicios químicos están contraindicados.",
+      "allowed_override": false
+    }
+  ],
+
+  "warning_rules": [
+    {
+      "rule_id": "W-001",
+      "name": "Cabello sensibilizado — bloqueo de oxidante alto",
+      "description": "Si la fibra está altamente procesada o dañada, limitar el oxidante a máximo 20 Vol.",
+      "trigger": {
+        "field": "diagnosis.fiber_integrity",
+        "condition": "IN ['highly_processed', 'damaged']"
+      },
+      "alert_code": "high_oxidant_blocked",
+      "severity": "warning",
+      "message": "El estado de la fibra no admite oxidantes de 30 o 40 Vol. El engine limitará la fórmula a 20 Vol máximo.",
+      "action": "cap_oxidant_at_20vol",
+      "allowed_override": false
+    },
+    {
+      "rule_id": "W-002",
+      "name": "Bond Hero obligatorio en fibra dañada",
+      "description": "Si la fibra está dañada, agregar Bond Hero a la lista de insumos de forma mandatoria.",
+      "trigger": {
+        "field": "diagnosis.fiber_integrity",
+        "condition": "IN ['highly_processed', 'damaged']"
+      },
+      "alert_code": "bond_hero_mandatory",
+      "severity": "warning",
+      "message": "Se agrega Bond Hero a la fórmula de forma obligatoria para proteger la fibra.",
+      "action": "add_bond_hero_to_formula",
+      "allowed_override": false
+    },
+    {
+      "rule_id": "W-003",
+      "name": "Scalp Protector recomendado en cuero sensible",
+      "description": "Si el cuero cabelludo es sensible o irritado, agregar Scalp Protector a los insumos.",
+      "trigger": {
+        "field": "diagnosis.scalp_condition",
+        "condition": "IN ['sensitive', 'irritated']"
+      },
+      "alert_code": "scalp_protector_recommended",
+      "severity": "warning",
+      "message": "Cuero cabelludo sensible detectado. Se recomienda agregar Scalp Protector antes de la aplicación.",
+      "action": "suggest_scalp_protector",
+      "allowed_override": true
+    },
+    {
+      "rule_id": "W-004",
+      "name": "Salto de nivel excesivo en cabello procesado",
+      "description": "Si el salto de nivel es mayor a 4 en cabello procesado, advertir y redirigir al módulo de decoloración controlada.",
+      "trigger": {
+        "field": "diagnosis.level_jump",
+        "condition": "> 4",
+        "additional_condition": "diagnosis.fiber_integrity NOT IN ['virgin']"
+      },
+      "alert_code": "excessive_level_jump",
+      "severity": "warning",
+      "message": "El salto de nivel solicitado ({level_jump} niveles) es elevado para el estado actual de la fibra. Se recomienda evaluar una Decoloración Controlada o una Tonalización como alternativa.",
+      "action": "redirect_to_controlled_bleaching_module",
+      "allowed_override": true
+    },
+    {
+      "rule_id": "W-005",
+      "name": "Tratamiento activo en fibra incompatible",
+      "description": "Si hay keratin, nanoplastia o alisado permanente activo, advertir antes de aplicar coloración oxidativa.",
+      "trigger": {
+        "field": "diagnosis.active_treatments_at_service",
+        "condition": "any IN ['keratin', 'nanoplasty', 'permanent_straightening']"
+      },
+      "alert_code": "active_treatment_conflict",
+      "severity": "warning",
+      "message": "La clienta tiene un tratamiento activo en la fibra que puede afectar la absorción del color y el resultado final. Confirmar compatibilidad antes de continuar.",
+      "allowed_override": true
+    },
+    {
+      "rule_id": "W-006",
+      "name": "Patch test no realizado o vencido",
+      "description": "Si no hay registro de patch test o el último fue hace más de 12 meses, solicitar uno nuevo.",
+      "trigger": {
+        "field": "health_profile.patch_test",
+        "condition": "performed == false OR date < (today - 365 days)"
+      },
+      "alert_code": "patch_test_required",
+      "severity": "warning",
+      "message": "No hay registro de prueba de alergia reciente. Se recomienda realizar patch test 48h antes del servicio.",
+      "allowed_override": true
+    },
+    {
+      "rule_id": "W-007",
+      "name": "Alta porosidad — ajuste de tiempo y oxidante",
+      "description": "Si la porosidad es alta, aplicar el modificador de reducción de tiempo y sugerir bajar el oxidante un nivel.",
+      "trigger": {
+        "field": "diagnosis.porosity_at_service",
+        "condition": "== 'high'"
+      },
+      "alert_code": "porosity_time_adjustment",
+      "severity": "info",
+      "message": "Alta porosidad detectada. El tiempo de exposición se redujo un 15% y se recomienda bajar el oxidante un nivel para evitar sobreoxidación.",
+      "action": "apply_porosity_modifier_085",
+      "allowed_override": false
+    },
+    {
+      "rule_id": "W-008",
+      "name": "Embarazo — servicios no oxidativos",
+      "description": "Informar sobre las precauciones durante el embarazo para servicios no bloqueados (corte, tratamientos, tóner sin amoniaco).",
+      "trigger": {
+        "field": "health_profile.hormonal_status",
+        "condition": "== 'pregnant'",
+        "additional_condition": "service_type NOT IN ['bleaching', 'bleaching_and_toning', 'global_color']"
+      },
+      "alert_code": "pregnancy_restriction",
+      "severity": "info",
+      "message": "La clienta está embarazada. Para servicios no oxidativos se recomienda buena ventilación y minimizar el tiempo de exposición a químicos.",
+      "allowed_override": true
+    }
+  ],
+
+  "porosity_time_modifiers": {
+    "description": "Factores multiplicadores aplicados al tiempo de exposición base según nivel de porosidad.",
+    "low":    { "modifier": 1.10, "description": "+10% al tiempo base. La fibra absorbe más lento." },
+    "medium": { "modifier": 1.00, "description": "Sin modificación. Tiempo base estándar." },
+    "high":   { "modifier": 0.85, "description": "-15% al tiempo base. La fibra absorbe más rápido, reducir para evitar sobreoxidación." }
+  },
+
+  "oxidant_cap_rules": {
+    "description": "Límites de oxidante según estado de la fibra.",
+    "virgin":            { "max_vol": 40 },
+    "healthy_processed": { "max_vol": 30 },
+    "processed":         { "max_vol": 30 },
+    "highly_processed":  { "max_vol": 20 },
+    "damaged":           { "max_vol": 20 }
+  }
+}

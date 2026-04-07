@@ -1,0 +1,366 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "chromatix/service_record",
+  "title": "Service Record",
+  "description": "Registro de una visita individual. Se crea uno por cada servicio realizado y se vincula al client_profile mediante client_id.",
+  "version": "1.0.0",
+  "type": "object",
+  "required": ["id", "client_id", "stylist_id", "service_date", "diagnosis", "formula", "informed_consent"],
+
+  "properties": {
+
+    "id": {
+      "type": "string",
+      "description": "UUID único del registro de servicio."
+    },
+
+    "client_id": {
+      "type": "string",
+      "description": "Referencia al id del client_profile."
+    },
+
+    "stylist_id": {
+      "type": "string",
+      "description": "ID del profesional que realizó el servicio."
+    },
+
+    "service_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+
+    "service_type": {
+      "type": "string",
+      "enum": [
+        "root_retouch",
+        "global_color",
+        "highlights",
+        "balayage",
+        "toning",
+        "bleaching",
+        "bleaching_and_toning",
+        "color_correction",
+        "keratin",
+        "cut",
+        "treatment",
+        "other"
+      ]
+    },
+
+    "client_request": {
+      "type": "string",
+      "description": "Qué pidió la clienta con sus propias palabras. Texto libre."
+    },
+
+    "diagnosis": {
+      "type": "object",
+      "description": "Diagnóstico del profesional al momento del servicio. Puede diferir del client_profile si hubo cambios desde la última visita.",
+      "required": ["current_base_level", "fiber_integrity", "scalp_condition", "porosity_at_service"],
+      "properties": {
+
+        "current_base_level": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10,
+          "description": "Nivel real observado en la raíz al momento de la visita."
+        },
+
+        "target_level": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10,
+          "description": "Nivel objetivo para este servicio."
+        },
+
+        "level_jump": {
+          "type": "integer",
+          "description": "Diferencia entre nivel actual y objetivo. Calculado automáticamente por el engine."
+        },
+
+        "fiber_integrity": {
+          "type": "string",
+          "enum": ["virgin", "healthy_processed", "processed", "highly_processed", "damaged"],
+          "description": "Estado de la fibra observado en esta visita específica."
+        },
+
+        "scalp_condition": {
+          "type": "string",
+          "enum": ["normal", "sensitive", "irritated", "with_wounds", "with_pathology"],
+          "description": "Estado del cuero cabelludo observado en esta visita."
+        },
+
+        "porosity_at_service": {
+          "type": "string",
+          "enum": ["low", "medium", "high"],
+          "description": "Porosidad evaluada en esta visita. Afecta el tiempo de exposición calculado."
+        },
+
+        "gray_percentage_observed": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Porcentaje de canas observado en esta visita."
+        },
+
+        "gray_distribution_observed": {
+          "type": "string",
+          "enum": ["none", "uniform", "concentrated_temples", "concentrated_crown", "scattered"]
+        },
+
+        "active_treatments_at_service": {
+          "type": "array",
+          "description": "Tratamientos activos en la fibra al momento del servicio.",
+          "items": { "type": "string" }
+        },
+
+        "stylist_notes": {
+          "type": "string",
+          "description": "Observaciones del profesional sobre el estado del cabello antes de comenzar."
+        }
+      }
+    },
+
+    "guardian_validation": {
+      "type": "object",
+      "description": "Resultado de la validación del Guardian antes de aprobar la fórmula.",
+      "properties": {
+        "validated": { "type": "boolean" },
+        "alerts_triggered": {
+          "type": "array",
+          "description": "Lista de alertas que el Guardian activó para este servicio.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "alert_code": {
+                "type": "string",
+                "enum": [
+                  "high_oxidant_blocked",
+                  "bond_hero_mandatory",
+                  "scalp_protector_recommended",
+                  "excessive_level_jump",
+                  "active_treatment_conflict",
+                  "allergy_risk",
+                  "pregnancy_restriction",
+                  "patch_test_required",
+                  "service_not_recommended"
+                ]
+              },
+              "alert_message": { "type": "string" },
+              "severity":      { "type": "string", "enum": ["info", "warning", "hard_stop"] }
+            }
+          }
+        },
+        "service_blocked": {
+          "type": "boolean",
+          "description": "True si el Guardian bloqueó completamente el servicio (hard_stop)."
+        },
+        "override_by_stylist": {
+          "type": "boolean",
+          "description": "True si el profesional decidió continuar a pesar de una advertencia (no aplica a hard_stop)."
+        },
+        "override_reason": { "type": "string" }
+      }
+    },
+
+    "informed_consent": {
+      "type": "object",
+      "description": "Consentimiento informado para este servicio específico.",
+      "required": ["client_informed", "consent_date"],
+      "properties": {
+        "client_informed": {
+          "type": "boolean",
+          "description": "El profesional confirmó que la clienta fue informada de los riesgos y alertas del Guardian."
+        },
+        "consent_date":    { "type": "string", "format": "date-time" },
+        "risk_level":      { "type": "string", "enum": ["low", "medium", "high"] },
+        "alerts_disclosed": {
+          "type": "array",
+          "description": "Lista de alert_code que fueron comunicados a la clienta.",
+          "items": { "type": "string" }
+        }
+      }
+    },
+
+    "formula": {
+      "type": "object",
+      "description": "Fórmula generada por el engine y aplicada en el servicio.",
+      "required": ["components", "oxidant_volume", "exposure_time_minutes"],
+      "properties": {
+
+        "components": {
+          "type": "array",
+          "description": "Componentes de la mezcla con gramajes exactos.",
+          "items": {
+            "type": "object",
+            "required": ["product_type", "brand", "reference", "grams"],
+            "properties": {
+              "product_type": {
+                "type": "string",
+                "enum": ["base", "reflection", "toner", "bleach_powder", "oxidant", "bond_hero", "scalp_protector", "additive", "other"]
+              },
+              "brand":      { "type": "string", "example": "Yellow Professional" },
+              "reference":  { "type": "string", "example": "8.21" },
+              "grams":      { "type": "number", "minimum": 0 },
+              "notes":      { "type": "string" }
+            }
+          }
+        },
+
+        "oxidant_volume": {
+          "type": "integer",
+          "enum": [10, 20, 30, 40],
+          "description": "Volumen del oxidante en VOL."
+        },
+
+        "exposure_time_minutes": {
+          "type": "integer",
+          "description": "Tiempo de exposición calculado por el engine (ya con modificador de porosidad aplicado)."
+        },
+
+        "porosity_modifier_applied": {
+          "type": "number",
+          "description": "Factor multiplicador aplicado al tiempo base por porosidad. Ej: 0.85 = -15% por alta porosidad."
+        },
+
+        "gray_coverage_strategy": {
+          "type": "object",
+          "description": "Estrategia de cobertura de canas calculada. Null si no aplica.",
+          "properties": {
+            "base_percentage":      { "type": "integer" },
+            "reflection_percentage":{ "type": "integer" },
+            "base_series_used":     { "type": "string", "enum": ["0", "013"], "description": "Serie .0 (natural) o .013 (Natural Bahía para reflexos cálidos)." }
+          }
+        },
+
+        "application_technique": {
+          "type": "string",
+          "enum": ["root_to_tip", "root_only", "mid_length_to_tip", "balayage_freehand", "foil_highlights", "full_head"],
+          "description": "Técnica de aplicación utilizada."
+        },
+
+        "temperature_celsius": {
+          "type": "integer",
+          "description": "Temperatura de activación si se utilizó calor. Null si no aplica."
+        }
+      }
+    },
+
+    "result_feedback": {
+      "type": "object",
+      "description": "Feedback del resultado real después del servicio. Alimenta la corrección de fórmulas futuras.",
+      "properties": {
+        "achieved_level": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10,
+          "description": "Nivel real obtenido después del servicio."
+        },
+        "color_deviation": {
+          "type": "string",
+          "enum": ["as_expected", "warmer_than_expected", "cooler_than_expected", "uneven", "insufficient_lift", "over_lifted"],
+          "description": "Desviación del resultado respecto a la fórmula calculada."
+        },
+        "coverage_result": {
+          "type": "string",
+          "enum": ["complete", "partial", "failed"],
+          "description": "Resultado de cobertura de canas. Null si no aplica."
+        },
+        "client_satisfaction": {
+          "type": "string",
+          "enum": ["very_satisfied", "satisfied", "neutral", "dissatisfied"],
+          "description": "Nivel de satisfacción expresado por la clienta."
+        },
+        "formula_correction_flag": {
+          "type": "boolean",
+          "description": "True si el resultado indica que la próxima fórmula para esta clienta debe ajustarse."
+        },
+        "correction_notes": {
+          "type": "string",
+          "description": "Notas del profesional sobre qué ajustar en la próxima visita."
+        },
+        "after_photos_attached": {
+          "type": "boolean",
+          "description": "Indica si se adjuntaron fotos del resultado final."
+        },
+        "after_photo_urls": {
+          "type": "array",
+          "items": { "type": "string", "format": "uri" }
+        }
+      }
+    },
+
+    "products_used_inventory": {
+      "type": "array",
+      "description": "Productos consumidos en este servicio para descuento de inventario.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "product_sku": { "type": "string" },
+          "grams_used":  { "type": "number" }
+        }
+      }
+    },
+
+    "home_care_recommendations": {
+      "type": "object",
+      "description": "Recomendaciones dadas a la clienta al finalizar el servicio.",
+      "properties": {
+        "products_recommended": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "wash_restriction_hours": {
+          "type": "integer",
+          "description": "Horas que debe esperar para lavar el cabello."
+        },
+        "heat_restriction_days": {
+          "type": "integer",
+          "description": "Días que debe evitar herramientas de calor."
+        },
+        "pool_sea_restriction_days": { "type": "integer" },
+        "general_notes":             { "type": "string" }
+      }
+    },
+
+    "retention": {
+      "type": "object",
+      "description": "Cálculo del próximo service y datos para el Retention Loop.",
+      "properties": {
+        "base_interval_days": {
+          "type": "integer",
+          "description": "Intervalo base según tipo de servicio (21-28 para retoque, 45 para color global)."
+        },
+        "adjusted_interval_days": {
+          "type": "integer",
+          "description": "Intervalo ajustado por el Retention Loop según rutina y estilo de vida de la clienta."
+        },
+        "next_service_suggested_date": {
+          "type": "string",
+          "format": "date"
+        },
+        "retention_factors_applied": {
+          "type": "array",
+          "description": "Factores que modificaron el intervalo base.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "factor":       { "type": "string", "example": "high_wash_frequency" },
+              "adjustment_days": { "type": "integer", "description": "Días que se restaron al intervalo. Negativo = acorta el intervalo." }
+            }
+          }
+        },
+        "notification_scheduled": {
+          "type": "boolean",
+          "description": "Si se programó la notificación push de recordatorio."
+        }
+      }
+    },
+
+    "before_photo_urls": {
+      "type": "array",
+      "description": "URLs de fotos tomadas antes del servicio.",
+      "items": { "type": "string", "format": "uri" }
+    }
+
+  }
+}
