@@ -1,0 +1,42 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "ChromatixApp_v.1",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "ChromatixApp_v.1 (profile mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "ChromatixApp_v.1 (release mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        },
+        {
+            "name": "lib",
+            "cwd": "lib",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "lib (profile mode)",
+            "cwd": "lib",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "lib (release mode)",
+            "cwd": "lib",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        }
+    ]
+}

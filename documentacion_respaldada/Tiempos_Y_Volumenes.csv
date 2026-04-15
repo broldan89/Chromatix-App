@@ -1,0 +1,7 @@
+ID_Servicio,Objetivo_Niveles,Volumen_H2O,Tiempo_Min,Tiempo_Max,Modo_App
+SERV_001,0 (Matizar),5 Vol (1.5%),10,20,Tonalización
+SERV_002,0 (Mismo tono),10 Vol (3%),25,35,Color Global
+SERV_003,1 Nivel,20 Vol (6%),35,40,Aclarado Leve
+SERV_004,2 Niveles,30 Vol (9%),40,45,Aclarado Medio
+SERV_005,3 Niveles,40 Vol (12%),45,50,Aclarado Fuerte
+SERV_006,4-5 Niveles,40 Vol (12%),50,55,Energy / Súper Aclarante

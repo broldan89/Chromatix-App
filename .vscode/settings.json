@@ -1,0 +1,4 @@
+{
+    "git.ignoreLimitWarning": true,
+    "dart.flutterSdkPath": "~/flutter_sdk"
+}

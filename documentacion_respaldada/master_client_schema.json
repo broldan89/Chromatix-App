@@ -1,0 +1,92 @@
+{
+  "client_id": "UUID-STRING",
+  "personal_data": {
+    "full_name": "Nombre y Apellido",
+    "birth_date": "YYYY-MM-DD",
+    "age": 0,
+    "phone": "+54 9 XXX XXXXXXX",
+    "email": "example@mail.com",
+    "lead_source": "Recomendación/Redes/etc",
+    "first_consultation_date": "2026-04-02"
+  },
+  "medical_alerts": {
+    "allergies": ["Tintes", "Látex", "Fragancias"],
+    "previous_adverse_reactions": "Descripción de reacciones previas",
+    "current_medications": "Medicamentos en curso",
+    "hormonal_status": "Embarazo/Lactancia/Menopausia/Tiroides",
+    "special_conditions": ["Psoriasis", "Alopecia", "Dermatitis"],
+    "informed_consent_signed": false
+  },
+  "hair_profile_baseline": {
+    "type": "Liso/Ondulado/Rizado/Afro",
+    "texture": "Fino/Medio/Grueso",
+    "density": "Escasa/Normal/Abundante",
+    "porosity": "Baja/Media/Alta",
+    "length": "Corto/Medio/Largo",
+    "general_state": "Sano/Dañado/Procesado",
+    "scalp": {
+      "type": "Normal/Graso/Seco/Mixto",
+      "sensitivity": "Alta/Media/Baja",
+      "conditions": ["Caspa", "Irritación", "Caída"]
+    }
+  },
+  "home_care_routine": {
+    "current_products": ["Shampoo X", "Mask Y"],
+    "wash_frequency": "Veces por semana",
+    "heat_tools_usage": "Frecuencia Secador/Plancha",
+    "thermal_protection": false,
+    "extra_products": ["Aceites", "Sérums"]
+  },
+  "chemical_legacy": {
+    "previous_tints": "Marca/Tono/Fecha última vez",
+    "bleach_history": "Nivel alcanzado/Procesos",
+    "straightening_keratins": "Tipo de producto/Fecha",
+    "recent_salon_treatments": "Proteínas/Hidrataciones"
+  },
+  "service_history_logs": [
+    {
+      "service_id": "UNIQUE-TRANS-ID",
+      "timestamp": "2026-04-02T18:00:00Z",
+      "intent": {
+        "requested_service": "Servicio solicitado",
+        "expectations": "Resultado deseado por la clienta",
+        "reported_problems": "Daño/Frizz/Caída"
+      },
+      "professional_diagnosis": {
+        "real_hair_state_assessment": "Evaluación del profesional",
+        "service_viability": true,
+        "contraindications": "Ninguna/Alertas",
+        "strand_test_result": "Resultado prueba de hebra",
+        "patch_test": {
+          "performed": true,
+          "result": "Negativo",
+          "date": "2026-03-31"
+        }
+      },
+      "technical_execution": {
+        "exact_formula": {
+          "tints": ["30g 7.0", "30g 7.1"],
+          "oxidant": "90ml 20 Vol",
+          "additives": ["Bond Hero 5ml", "Scalp Protector"],
+          "brand_line": "Yellow Color"
+        },
+        "processing_time": "35 min",
+        "temperature_applied": "Ambiente/Calor",
+        "process_observations": "Cómo respondió el cabello",
+        "photos_ids": ["before_001.jpg", "after_001.jpg"]
+      },
+      "post_service_management": {
+        "recommended_home_products": ["Yellow Repair Mask"],
+        "sold_products": ["Shampoo Color Care"],
+        "restrictions_notes": "No lavar por 48hs",
+        "next_service_interval_days": 28,
+        "estimated_return_date": "2026-04-30"
+      },
+      "psychology_lifestyle": {
+        "communication_style": "Detallista/Pragmática",
+        "lifestyle_factors": "Deportista/Pileta/Sol",
+        "personal_notes": "Prefiere que el estilista decida"
+      }
+    }
+  ]
+}
